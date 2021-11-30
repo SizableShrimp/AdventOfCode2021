@@ -112,7 +112,7 @@ public abstract class Day {
     protected void parse() {}
 
     /**
-     * @deprecated This should only be using for benchmarking purposes. Other uses are not supported.
+     * This should only be using for benchmarking purposes. Other uses are not supported.
      */
     @VisibleForTesting
     public final void parseTesting() {

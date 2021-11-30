@@ -26,4 +26,7 @@ dependencies {
 task jmh(type: JavaExec, dependsOn: testClasses) {
     mainClass = 'org.openjdk.jmh.Main'
     classpath = sourceSets.test.compileClasspath + sourceSets.test.runtimeClasspath
+    def toolchain = project.extensions.getByType(JavaPluginExtension.class).toolchain
+    def service = project.extensions.getByType(JavaToolchainService.class)
+    javaLauncher = service.launcherFor(toolchain)
 }
