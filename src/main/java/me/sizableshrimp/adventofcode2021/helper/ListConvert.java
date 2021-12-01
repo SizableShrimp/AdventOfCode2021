@@ -23,42 +23,65 @@
 
 package me.sizableshrimp.adventofcode2021.helper;
 
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
+import it.unimi.dsi.fastutil.booleans.BooleanList;
+import it.unimi.dsi.fastutil.chars.CharArrayList;
+import it.unimi.dsi.fastutil.chars.CharList;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
+
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ListConvert {
     /**
-     * Parse all lines to integers.
+     * Parse all lines to integers using {@link Integer#parseInt(String)}.
      * <b>NOTE: Not the same as {@link LineConvert#ints}</b>
      *
      * @return A list of parsed integers.
      */
-    public static List<Integer> ints(List<String> list) {
-        return convert(list, Integer::valueOf);
+    public static IntList ints(List<String> list) {
+        IntList l = new IntArrayList();
+        for (String s : list) {
+            l.add(Integer.parseInt(s));
+        }
+        return l;
     }
 
-    private static <T> List<T> convert(List<String> list, Function<String, T> func) {
-        return list.stream()
-                .map(func)
-                .collect(Collectors.toList());
+    public static LongList longs(List<String> list) {
+        LongList l = new LongArrayList();
+        for (String s : list) {
+            l.add(Long.parseLong(s));
+        }
+        return l;
     }
 
-    public static List<Long> longs(List<String> list) {
-        return convert(list, Long::valueOf);
+    public static DoubleList doubles(List<String> list) {
+        DoubleList l = new DoubleArrayList();
+        for (String s : list) {
+            l.add(Double.parseDouble(s));
+        }
+        return l;
     }
 
-    public static List<Double> doubles(List<String> list) {
-        return convert(list, Double::valueOf);
+    public static BooleanList booleans(List<String> list) {
+        BooleanList l = new BooleanArrayList();
+        for (String s : list) {
+            l.add(Boolean.parseBoolean(s));
+        }
+        return l;
     }
 
-    public static List<Boolean> booleans(List<String> list) {
-        return convert(list, Boolean::valueOf);
-    }
-
-    public static List<Character> chars(List<String> list) {
-        return list.stream()
-                .flatMap(s -> LineConvert.chars(s).stream())
-                .collect(Collectors.toList());
+    public static CharList chars(List<String> list) {
+        CharArrayList l = new CharArrayList();
+        for (String s : list) {
+            for (char c : s.toCharArray()) {
+                l.add(c);
+            }
+        }
+        return l;
     }
 }
