@@ -45,11 +45,11 @@ import java.util.concurrent.TimeUnit;
 
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @BenchmarkMode(Mode.AverageTime)
-@Warmup(time = 2)
+@Warmup(time = 4)
+@Fork(value = 3, warmups = 1)
+@Measurement(iterations = 3, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
 public class AllDays {
     @Benchmark
-    @Fork(value = 3, warmups = 1)
-    @Measurement(iterations = 3, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
     public void parseAndEvaluate(MultiDayState state) {
         state.instance.parseAndEvaluate();
     }

@@ -26,9 +26,6 @@ package me.sizableshrimp.adventofcode2021.days;
 import it.unimi.dsi.fastutil.ints.IntList;
 import me.sizableshrimp.adventofcode2021.helper.ListConvert;
 import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
-import one.util.streamex.IntStreamEx;
-
-import java.util.stream.IntStream;
 
 public class Day01 extends SeparatedDay {
     private IntList depths;
@@ -39,11 +36,11 @@ public class Day01 extends SeparatedDay {
 
     @Override
     protected Object part1() {
-        // return IntStream.range(1, depths.size()).filter(i -> depths.getInt(i) > depths.getInt(i - 1)).count();
+        // return IntStream.range(0, depths.size() - 1).filter(i -> depths.getInt(i + 1) > depths.getInt(i)).count();
         int increased = 0;
 
-        for (int i = 1; i < depths.size(); i++) {
-            if (depths.getInt(i) > depths.getInt(i - 1))
+        for (int i = 0; i < depths.size() - 1; i++) {
+            if (depths.getInt(i + 1) > depths.getInt(i))
                 increased++;
         }
 
@@ -52,15 +49,13 @@ public class Day01 extends SeparatedDay {
 
     @Override
     protected Object part2() {
-        // return IntStream.range(1, depths.size()).filter(i -> i < depths.size() - 2 && depths.getInt(i) + depths.getInt(i + 1) + depths.getInt(i + 2) > depths.getInt(i - 1) + depths.getInt(i) + depths.getInt(i + 1)).count();
+        // return IntStream.range(0, depths.size()).filter(i -> i < depths.size() - 3 && depths.getInt(i + 3) > depths.getInt(i)).count();
         int increased = 0;
-        int prev = -1;
 
-        for (int i = 0; i < depths.size() - 2; i++) {
-            int depth = depths.getInt(i) + depths.getInt(i + 1) + depths.getInt(i + 2);
-            if (depth > prev && prev != -1)
+        for (int i = 0; i < depths.size() - 3; i++) {
+            // a + b + c < b + c + d is equivalent to a < d or d(i) < d(i + 3)
+            if (depths.getInt(i + 3) > depths.getInt(i))
                 increased++;
-            prev = depth;
         }
 
         return increased;

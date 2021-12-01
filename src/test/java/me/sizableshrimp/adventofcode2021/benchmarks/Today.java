@@ -36,16 +36,18 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.annotations.Warmup;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @BenchmarkMode(Mode.AverageTime)
+@Warmup(time = 4)
+@Fork(value = 3, warmups = 1)
+@Measurement(iterations = 3, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
 public class Today {
     @Benchmark
-    @Fork(value = 3, warmups = 1)
-    @Measurement(iterations = 3, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
     public void parseAndEvaluateToday(DayState state) {
         state.instance.parseAndEvaluate();
     }
