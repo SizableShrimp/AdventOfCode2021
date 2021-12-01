@@ -21,22 +21,23 @@
  * SOFTWARE.
  */
 
-package me.sizableshrimp.adventofcode2021.days;
+package me.sizableshrimp.adventofcode2021.helper;
 
-import me.sizableshrimp.adventofcode2021.templates.Day;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class BaseClass extends Day {
-    public static void main(String[] args) {
-        new BaseClass().run();
+public class OccurrenceHelper {
+    public static <T> T getMostOccurring(Stream<T> stream) {
+        return stream.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .get().getKey();
     }
 
-    @Override
-    protected Result evaluate() {
-        return Result.of(null, null);
-    }
-
-    @Override
-    protected void parse() {
-
-    }
+    // public static <T> T getMostOccurring(Map<T, Integer> map) {
+    //     map.entrySet().stream().sorted()
+    // }
 }

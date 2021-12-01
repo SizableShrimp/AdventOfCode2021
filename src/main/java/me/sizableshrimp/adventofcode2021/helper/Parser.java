@@ -34,6 +34,7 @@ import java.util.function.Consumer;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class Parser {
     private static final Pattern pattern = Pattern.compile("(\\d+,\\d+)");
@@ -68,6 +69,18 @@ public class Parser {
         for (String line : lines) {
             consumer.accept(parseMatch(pattern, line));
         }
+    }
+
+    /**
+     * Parses each line from the input list using the provided pattern and {@link Matcher#matches()}.
+     *
+     * @param pattern The pattern to use for matching to each line.
+     * @param lines The list of lines to parse.
+     * @return A stream of the {@link MatchWrapper}s for each line.
+     * Use {@link MatchResult#group()} to get the full line.
+     */
+    public static Stream<MatchWrapper> parseLinesStream(Pattern pattern, List<String> lines) {
+        return lines.stream().map(l -> parseMatch(pattern, l));
     }
 
     /**

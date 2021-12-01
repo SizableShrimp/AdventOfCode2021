@@ -23,6 +23,9 @@
 
 package me.sizableshrimp.adventofcode2021.helper;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -36,13 +39,23 @@ public class LineConvert {
      * @param line The string line.
      * @return The integers found in the line.
      */
-    public static List<Integer> ints(String line) {
+    public static IntList ints(String line) {
         Matcher m = Pattern.compile("-?\\d+").matcher(line);
-        List<Integer> result = new ArrayList<>();
+        IntList result = new IntArrayList();
         while (m.find()) {
             result.add(Integer.parseInt(m.group(0)));
         }
         return result;
+    }
+
+    /**
+     * Find all integers in a line.
+     *
+     * @param line The string line.
+     * @return The integers found in the line.
+     */
+    public static int[] intsArray(String line) {
+        return ArrayConvert.unboxInts(ints(line));
     }
 
     public static List<Long> longs(String line) {

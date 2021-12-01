@@ -23,6 +23,7 @@
 
 package me.sizableshrimp.adventofcode2021.helper;
 
+import it.unimi.dsi.fastutil.chars.Char2CharFunction;
 import me.sizableshrimp.adventofcode2021.templates.Coordinate;
 import me.sizableshrimp.adventofcode2021.templates.EnumState;
 
@@ -112,9 +113,8 @@ public class GridHelper {
         return grid;
     }
 
-    public static boolean[][] convertBool(BiFunction<Integer, Integer, boolean[][]> generator, List<String> lines, Predicate<Character> pred) {
-        boolean[][] grid = generator.apply(lines.size(), lines.get(0).length());
-        return convertBool(grid, lines, pred);
+    public static boolean[][] convertBool(List<String> lines, Predicate<Character> pred) {
+        return convertBool(new boolean[lines.size()][lines.get(0).length()], lines, pred);
     }
 
     public static boolean[][] convertBool(boolean[][] grid, List<String> lines, Predicate<Character> pred) {
@@ -122,9 +122,8 @@ public class GridHelper {
         return grid;
     }
 
-    public static int[][] convertInt(BiFunction<Integer, Integer, int[][]> generator, List<String> lines, IntFunction<Character> func) {
-        int[][] grid = generator.apply(lines.size(), lines.get(0).length());
-        return convertInt(grid, lines, func);
+    public static int[][] convertInt(List<String> lines, IntFunction<Character> func) {
+        return convertInt(new int[lines.size()][lines.get(0).length()], lines, func);
     }
 
     public static int[][] convertInt(int[][] grid, List<String> lines, IntFunction<Character> func) {
@@ -132,12 +131,20 @@ public class GridHelper {
         return grid;
     }
 
-    public static long[][] convertLong(BiFunction<Integer, Integer, long[][]> generator, List<String> lines, LongFunction<Character> func) {
-        long[][] grid = generator.apply(lines.size(), lines.get(0).length());
-        return convertLong(grid, lines, func);
+    public static long[][] convertLong(List<String> lines, LongFunction<Character> func) {
+        return convertLong(new long[lines.size()][lines.get(0).length()], lines, func);
     }
 
     public static long[][] convertLong(long[][] grid, List<String> lines, LongFunction<Character> func) {
+        convert(lines, (y, x, c) -> grid[y][x] = func.apply(c));
+        return grid;
+    }
+
+    public static char[][] convertChar(List<String> lines, Char2CharFunction func) {
+        return convertChar(new char[lines.size()][lines.get(0).length()], lines, func);
+    }
+
+    public static char[][] convertChar(char[][] grid, List<String> lines, Char2CharFunction func) {
         convert(lines, (y, x, c) -> grid[y][x] = func.apply(c));
         return grid;
     }
@@ -155,6 +162,42 @@ public class GridHelper {
         for (T[] ts : grid) {
             for (T t : ts) {
                 System.out.print(t.getMappedChar());
+            }
+            System.out.println();
+        }
+    }
+
+    public static void print(int[][] grid) {
+        for (int[] ts : grid) {
+            for (int t : ts) {
+                System.out.print(t);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void print(long[][] grid) {
+        for (long[] ts : grid) {
+            for (long t : ts) {
+                System.out.print(t);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void print(boolean[][] grid) {
+        for (boolean[] ts : grid) {
+            for (boolean t : ts) {
+                System.out.print(t);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void print(char[][] grid) {
+        for (char[] ts : grid) {
+            for (char t : ts) {
+                System.out.print(t);
             }
             System.out.println();
         }
@@ -187,7 +230,43 @@ public class GridHelper {
     }
 
     public static <T> boolean isValid(T[][] grid, int x, int y) {
-        return y >= 0 && y < grid.length && x >= 0 && x < grid[0].length;
+        return extracted(x, y, grid[0].length, grid.length);
+    }
+
+    public static boolean isValid(int[][] grid, Coordinate coord) {
+        return isValid(grid, coord.x, coord.y);
+    }
+
+    public static boolean isValid(int[][] grid, int x, int y) {
+        return extracted(x, y, grid[0].length, grid.length);
+    }
+
+    public static boolean isValid(long[][] grid, Coordinate coord) {
+        return isValid(grid, coord.x, coord.y);
+    }
+
+    public static boolean isValid(long[][] grid, int x, int y) {
+        return extracted(x, y, grid[0].length, grid.length);
+    }
+
+    public static boolean isValid(boolean[][] grid, Coordinate coord) {
+        return isValid(grid, coord.x, coord.y);
+    }
+
+    public static boolean isValid(boolean[][] grid, int x, int y) {
+        return extracted(x, y, grid[0].length, grid.length);
+    }
+
+    public static boolean isValid(char[][] grid, Coordinate coord) {
+        return isValid(grid, coord.x, coord.y);
+    }
+
+    public static boolean isValid(char[][] grid, int x, int y) {
+        return extracted(x, y, grid[0].length, grid.length);
+    }
+
+    private static boolean extracted(int x, int y, int width, int height) {
+        return y >= 0 && y < height && x >= 0 && x < width;
     }
 
     public static boolean allFalse(boolean[][] grid) {

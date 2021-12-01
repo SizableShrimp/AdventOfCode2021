@@ -112,6 +112,22 @@ public class Coordinate {
         return GridHelper.isValid(grid, this);
     }
 
+    public boolean isValid(int[][] grid) {
+        return GridHelper.isValid(grid, this);
+    }
+
+    public boolean isValid(long[][] grid) {
+        return GridHelper.isValid(grid, this);
+    }
+
+    public boolean isValid(boolean[][] grid) {
+        return GridHelper.isValid(grid, this);
+    }
+
+    public boolean isValid(char[][] grid) {
+        return GridHelper.isValid(grid, this);
+    }
+
     /**
      * Finds the Manhattan distance from this coordinate to the origin at (0, 0).
      *
@@ -156,6 +172,10 @@ public class Coordinate {
 
     public Coordinate resolve(Direction direction) {
         return resolve(direction.x, direction.y);
+    }
+
+    public Coordinate resolve(Direction direction, int count) {
+        return resolve(direction.x * count, direction.y * count);
     }
 
     @Override

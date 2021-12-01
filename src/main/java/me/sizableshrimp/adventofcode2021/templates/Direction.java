@@ -68,10 +68,10 @@ public enum Direction {
 
     public static Direction getCardinalDirection(char c) {
         return switch (c) {
-            case 'N' -> NORTH;
-            case 'E' -> EAST;
-            case 'S' -> SOUTH;
-            case 'W' -> WEST;
+            case 'N', 'U' -> NORTH;
+            case 'E', 'R' -> EAST;
+            case 'S', 'D' -> SOUTH;
+            case 'W', 'L' -> WEST;
             default -> throw new IllegalStateException("Unexpected value: " + c);
         };
     }
@@ -91,8 +91,20 @@ public enum Direction {
         return CARDINAL_ORDINAL;
     }
 
+    public Direction relativeDegrees(int degrees) {
+        return fromDegrees(this.degrees + degrees);
+    }
+
     public Direction opposite() {
-        return fromDegrees(this.degrees + 180);
+        return relativeDegrees(180);
+    }
+
+    public Direction clockwise() {
+        return relativeDegrees(90);
+    }
+
+    public Direction counterClockwise() {
+        return relativeDegrees(-90);
     }
 
     public static Direction fromDegrees(int degrees) {
@@ -108,9 +120,5 @@ public enum Direction {
 
     public Coordinate asCoords() {
         return Coordinate.of(this.x, this.y);
-    }
-
-    public Direction relativeDegrees(int degrees) {
-        return fromDegrees(this.degrees + degrees);
     }
 }
