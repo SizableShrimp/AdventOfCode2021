@@ -25,6 +25,8 @@ package me.sizableshrimp.adventofcode2021.helper;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,9 +60,9 @@ public class LineConvert {
         return ArrayConvert.unboxInts(ints(line));
     }
 
-    public static List<Long> longs(String line) {
+    public static LongList longs(String line) {
         Matcher m = Pattern.compile("-?\\d+").matcher(line);
-        List<Long> result = new ArrayList<>();
+        LongList result = new LongArrayList();
         while (m.find()) {
             result.add(Long.parseLong(m.group(0)));
         }

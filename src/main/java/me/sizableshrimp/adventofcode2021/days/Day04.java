@@ -23,22 +23,24 @@
 
 package me.sizableshrimp.adventofcode2021.days;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import me.sizableshrimp.adventofcode2021.helper.LineConvert;
-import me.sizableshrimp.adventofcode2021.templates.Day;
+import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
-public class Day04 extends Day {
-    private List<Integer> drawList;
-    private Multimap<Integer, Slot> slotCallMap;
+public class Day04 extends SeparatedDay {
+    private IntList drawList;
+    private Int2IntMap drawMap;
     private List<Board> boards;
 
     public static void main(String[] args) {
@@ -46,36 +48,38 @@ public class Day04 extends Day {
     }
 
     @Override
-    protected Result evaluate() {
-        int part1 = -1;
+    protected Object part1() {
+        return getWinningScore(false);
+    }
 
-        for (int num : drawList) {
-            for (Slot slot : slotCallMap.get(num)) {
-                Board board = slot.getBoard();
-                if (board.isDone())
-                    continue;
+    @Override
+    protected Object part2() {
+        return getWinningScore(true);
+    }
 
-                slot.setEnabled(true);
-                if (board.hasBingo()) {
-                    if (part1 == -1)
-                        part1 = board.getUnmarkedSum() * num;
-                    board.setDone(true);
-                    if (boards.size() == 1) {
-                        return Result.of(part1, board.getUnmarkedSum() * num);
-                    }
-                    boards.remove(board);
-                }
+    private int getWinningScore(boolean max) {
+        Board selected = null;
+        int target = 0;
+
+        for (Board board : boards) {
+            int winIndex = board.getWinIndex();
+            if (selected == null || (max && winIndex > target) || (!max  && winIndex < target)) {
+                target = winIndex;
+                selected = board;
             }
         }
 
-        throw new IllegalStateException();
+        return selected.getScore(target);
     }
 
     @Override
     protected void parse() {
-        drawList = Arrays.stream(lines.get(0).split(",")).map(Integer::parseInt).toList();
+        drawList = IntArrayList.toList(Arrays.stream(lines.get(0).split(",")).mapToInt(Integer::parseInt));
+        drawMap = new Int2IntOpenHashMap();
+        for (int i = 0; i < drawList.size(); i++) {
+            drawMap.put(drawList.getInt(i), i);
+        }
 
-        slotCallMap = MultimapBuilder.hashKeys().arrayListValues().build();
         boards = new ArrayList<>();
 
         Board cur = null;
@@ -87,67 +91,59 @@ public class Day04 extends Day {
                 continue;
             }
 
-            IntList nums = LineConvert.ints(line);
-            Board finalCur = cur;
-            List<Slot> slots = nums.intStream().mapToObj(n -> new Slot(n, finalCur)).toList();
-            slots.forEach(s -> slotCallMap.put(s.num, s));
-            cur.board.add(slots);
+            cur.board.add(IntArrayList.toList(LineConvert.ints(line).intStream().map(drawMap::get)));
         }
     }
 
-    @Data
-    private class Slot {
-        final int num;
-        @ToString.Exclude
-        @EqualsAndHashCode.Exclude
-        final Board board;
-        boolean enabled;
-    }
-
-    @Data
+    @RequiredArgsConstructor
+    @Getter
+    @Setter
     private class Board {
-        final List<List<Slot>> board = new ArrayList<>();
+        final List<IntList> board = new ArrayList<>();
         boolean done;
+        int winIndex = -1;
 
-        int getUnmarkedSum() {
-            return board.stream().mapToInt(l -> l.stream().filter(s -> !s.isEnabled()).mapToInt(Slot::getNum).sum()).sum();
+        int getScore(int winIndex) {
+            return drawList.getInt(winIndex) * getUnmarkedSum(winIndex);
         }
 
-        boolean hasBingo() {
-            for (List<Slot> row : board) {
-                boolean valid = true;
-                for (Slot slot : row) {
-                    if (!slot.isEnabled()) {
-                        valid = false;
-                        break;
-                    }
-                }
-                if (valid)
-                    return true;
-            }
-
-            for (int x = 0; x < 5; x++) {
-                boolean valid = true;
-                for (List<Slot> row : board) {
-                    if (!row.get(x).isEnabled()) {
-                        valid = false;
-                        break;
-                    }
-                }
-                if (valid)
-                    return true;
-            }
-
-            // This isn't real bingo since diagonals aren't counted, but that's what the problem said to do
-            return false;
+        int getUnmarkedSum(int winIndex) {
+            return board.stream().mapToInt(row -> row.intStream().filter(n -> n > winIndex).map(drawList::getInt).sum()).sum();
         }
 
-        @Override
-        public String toString() {
+        int getWinIndex() {
+            if (winIndex == -1) {
+                int min = Integer.MAX_VALUE;
+
+                for (IntList row : board) {
+                    int rowMax = 0;
+                    for (int num : row) {
+                        rowMax = Math.max(rowMax, num);
+                    }
+                    min = Math.min(min, rowMax);
+                }
+
+                for (int x = 0; x < 5; x++) {
+                    int columnMax = 0;
+                    for (IntList row : board) {
+                        columnMax = Math.max(columnMax, row.getInt(x));
+                    }
+                    min = Math.min(min, columnMax);
+                }
+
+                winIndex = min;
+                // winIndex = IntStream.concat(board.stream().mapToInt(row -> row.intStream().max().orElseThrow()),
+                //         IntStream.range(0, 5).map(x -> board.stream().mapToInt(row -> row.getInt(x)).max().orElseThrow())).min().orElseThrow();
+            }
+
+            return winIndex;
+        }
+
+        public String toString(int winIndex) {
             StringBuilder sb = new StringBuilder();
-            for (List<Slot> row : board) {
-                for (Slot s : row) {
-                    sb.append(s.isEnabled() ? '#' : '.');
+            for (IntList row : board) {
+                for (int num : row) {
+                    sb.append(num <= winIndex ? '#' : '.');
                 }
                 sb.append('\n');
             }
