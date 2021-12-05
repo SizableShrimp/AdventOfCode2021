@@ -55,7 +55,6 @@ public class AllDays {
     }
 
     @Benchmark
-    @SuppressWarnings("deprecation")
     public void parse(MultiDayState state) {
         state.instance.parseTesting();
     }

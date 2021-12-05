@@ -23,6 +23,8 @@
 
 package me.sizableshrimp.adventofcode2021.templates;
 
+import com.google.common.annotations.VisibleForTesting;
+
 /**
  * A {@link Day} which has both parts of the challenge separated into different internal methods.
  */
@@ -41,4 +43,20 @@ public abstract class SeparatedDay extends Day {
      * @return The result of part 2
      */
     protected abstract Object part2();
+
+    /**
+     * This should only be using for benchmarking purposes. Other uses are not supported.
+     */
+    @VisibleForTesting
+    public final void part1Testing() {
+        part1();
+    }
+
+    /**
+     * This should only be using for benchmarking purposes. Other uses are not supported.
+     */
+    @VisibleForTesting
+    public final void part2Testing() {
+        part2();
+    }
 }

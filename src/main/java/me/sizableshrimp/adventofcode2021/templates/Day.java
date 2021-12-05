@@ -24,9 +24,6 @@
 package me.sizableshrimp.adventofcode2021.templates;
 
 import com.google.common.annotations.VisibleForTesting;
-import lombok.AllArgsConstructor;
-import lombok.Value;
-import lombok.experimental.NonFinal;
 import me.sizableshrimp.adventofcode2021.helper.DataManager;
 
 import java.util.List;
@@ -38,7 +35,7 @@ import java.util.List;
  */
 public abstract class Day {
     /**
-     * An <b>unmodifiable</b>> list of the lines parsed from the input file for the challenge.
+     * An <b>unmodifiable</b> list of the lines parsed from the input file for the challenge.
      * For example, an input file with the data:
      * <pre>{@code 1
      * 2

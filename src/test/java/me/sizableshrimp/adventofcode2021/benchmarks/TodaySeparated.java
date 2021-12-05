@@ -25,6 +25,7 @@ package me.sizableshrimp.adventofcode2021.benchmarks;
 
 import me.sizableshrimp.adventofcode2021.Main;
 import me.sizableshrimp.adventofcode2021.templates.Day;
+import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -46,24 +47,30 @@ import java.util.concurrent.TimeUnit;
 @Warmup(time = 4)
 @Fork(value = 3, warmups = 1)
 @Measurement(iterations = 3, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
-public class Today {
-    @Benchmark
-    public void parseAndEvaluateToday(DayState state) {
-        state.instance.parseAndEvaluate();
-    }
-
+public class TodaySeparated {
     @Benchmark
     public void parseToday(DayState state) {
         state.instance.parseTesting();
     }
 
+    @Benchmark
+    public void part1Today(DayState state) {
+        state.instance.part1Testing();
+    }
+
+    @Benchmark
+    public void part2Today(DayState state) {
+        state.instance.part2Testing();
+    }
+
     @State(Scope.Thread)
     public static class DayState {
-        Day instance;
+        SeparatedDay instance;
 
         @Setup(Level.Trial)
         public void setup() throws NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException, InstantiationException {
-            instance = Main.getCurrentDayConstructor().newInstance();
+            instance = (SeparatedDay) Main.getCurrentDayConstructor().newInstance();
+            instance.parseTesting();
         }
 
         @TearDown(Level.Trial)

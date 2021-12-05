@@ -168,7 +168,7 @@ public class Main {
     }
 
     /**
-     * Runs and prints all days existing up to 25 and provides an estimate of the runtime.
+     * Runs and prints all days existing up to and including 25 and provides an estimate of the runtime.
      */
     public static void runAll() {
         List<Day> days = new ArrayList<>(25);
