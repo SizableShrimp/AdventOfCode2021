@@ -23,21 +23,65 @@
 
 package me.sizableshrimp.adventofcode2021.helper;
 
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+
+import java.util.Collection;
 import java.util.stream.Stream;
 
 public class OccurrenceHelper {
-    public static <T> T getMostOccurring(Stream<T> stream) {
-        return stream.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .entrySet()
-                .stream()
-                .max(Map.Entry.comparingByValue())
-                .get().getKey();
+    private static <T> Object2LongOpenHashMap<T> getOccurrences(Stream<T> stream) {
+        Object2LongOpenHashMap<T> counts = new Object2LongOpenHashMap<>();
+        stream.forEach(k -> counts.addTo(k, 1));
+        return counts;
     }
 
-    // public static <T> T getMostOccurring(Map<T, Integer> map) {
-    //     map.entrySet().stream().sorted()
-    // }
+    public static <T> Object2LongOpenHashMap<T> getOccurrences(Collection<T> collection) {
+        Object2LongOpenHashMap<T> counts = new Object2LongOpenHashMap<>();
+        collection.forEach(k -> counts.addTo(k, 1));
+        return counts;
+    }
+
+    public static <T> T getMostOccurring(Stream<T> stream) {
+        Object2LongOpenHashMap<T> counts = getOccurrences(stream);
+        return getMostOccurring(counts);
+    }
+
+    public static <T> T getMostOccurring(Collection<T> collection) {
+        Object2LongOpenHashMap<T> counts = getOccurrences(collection);
+        return getMostOccurring(counts);
+    }
+
+    public static <T> T getMostOccurring(Object2LongMap<T> counts) {
+        return getOccurrence(counts, true);
+    }
+
+    public static <T> T getLeastOccurring(Stream<T> stream) {
+        Object2LongOpenHashMap<T> counts = new Object2LongOpenHashMap<>();
+        stream.forEach(k -> counts.addTo(k, 1));
+        return getLeastOccurring(counts);
+    }
+
+    public static <T> T getLeastOccurring(Collection<T> collection) {
+        Object2LongOpenHashMap<T> counts = new Object2LongOpenHashMap<>();
+        collection.forEach(k -> counts.addTo(k, 1));
+        return getLeastOccurring(counts);
+    }
+
+    public static <T> T getLeastOccurring(Object2LongMap<T> counts) {
+        return getOccurrence(counts, false);
+    }
+
+    private static <T> T getOccurrence(Object2LongMap<T> counts, boolean most) {
+        T result = null;
+        long targetCount = 0;
+        for (var entry : counts.object2LongEntrySet()) {
+            long count = entry.getLongValue();
+            if (result == null || most && count > targetCount || !most && count < targetCount) {
+                result = entry.getKey();
+                targetCount = count;
+            }
+        }
+        return result;
+    }
 }
