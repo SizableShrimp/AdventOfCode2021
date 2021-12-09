@@ -43,54 +43,48 @@ public class Processor {
     }
 
     // Union
-    public static <T> Set<T> union(Set<T> result, Collection<T> element) {
-        if (result == null) {
-            result = new HashSet<>(element);
-        } else {
-            result.addAll(element);
-        }
-        return result;
+    public static <T> Set<T> union(Collection<T> first, Collection<T> second) {
+        Set<T> union = new HashSet<>(first);
+        union.addAll(second);
+        return union;
     }
 
-    public static <T> Set<T> unionArray(Set<T> result, T[] element) {
+/*    public static <T> Set<T> unionArray(Set<T> result, T[] element) {
         return union(result, Arrays.asList(element));
     }
 
     public static <T> Set<T> intersectionArray(Set<T> result, T[] element) {
         return intersection(result, Arrays.asList(element));
-    }
+    }*/
 
     // Intersection
-    public static <T> Set<T> intersection(Set<T> result, Collection<T> element) {
-        if (result == null) {
-            result = new HashSet<>(element);
-        } else {
-            result.retainAll(element);
-        }
-        return result;
+    public static <T> Set<T> intersection(Collection<T> first, Collection<T> second) {
+        Set<T> intersection = new HashSet<>(first);
+        intersection.retainAll(second);
+        return intersection;
     }
 
     public static <T> BinaryOperator<Set<T>> intersectionBinaryOp() {
         return Processor::intersection;
     }
 
-    // Union Array Overloads
-    public static Set<Character> unionArray(Set<Character> result, char[] element) {
-        List<Character> l = new ArrayList<>();
-        for (char c : element) {
-            l.add(c);
-        }
-        return union(result, l);
-    }
-
-    // Intersection Array Overloads
-    public static Set<Character> intersectionArray(Set<Character> result, char[] element) {
-        List<Character> l = new ArrayList<>();
-        for (char c : element) {
-            l.add(c);
-        }
-        return intersection(result, l);
-    }
+    // // Union Array Overloads
+    // public static Set<Character> unionArray(Set<Character> result, char[] element) {
+    //     List<Character> l = new ArrayList<>();
+    //     for (char c : element) {
+    //         l.add(c);
+    //     }
+    //     return union(result, l);
+    // }
+    //
+    // // Intersection Array Overloads
+    // public static Set<Character> intersectionArray(Set<Character> result, char[] element) {
+    //     List<Character> l = new ArrayList<>();
+    //     for (char c : element) {
+    //         l.add(c);
+    //     }
+    //     return intersection(result, l);
+    // }
 
     // Splits
     public static <T> List<List<T>> split(List<T> list, Predicate<T> splitter) {
