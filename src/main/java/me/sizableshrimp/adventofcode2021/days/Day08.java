@@ -57,6 +57,7 @@ public class Day08 extends Day {
 
     @Override
     protected Result evaluate() {
+        int part1 = 0;
         int sum = 0;
 
         for (Display display : displays) {
@@ -78,13 +79,16 @@ public class Day08 extends Day {
                 CharSet chars = charSet(digitStr);
                 int product = Processor.intersection(one, chars).size() * Processor.intersection(four, chars).size() * Processor.intersection(eight, chars).size();
                 int digit = PRODUCTS_MAP.get(product);
+                switch (digit) {
+                    case 1, 4, 7, 8 -> part1++;
+                }
                 code = 10 * code + digit;
             }
 
             sum += code;
         }
 
-        return Result.of(sum, null);
+        return Result.of(part1, sum);
     }
 
     private CharSet charSet(String s) {
