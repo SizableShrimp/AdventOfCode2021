@@ -24,6 +24,8 @@
 package me.sizableshrimp.adventofcode2021.helper;
 
 import it.unimi.dsi.fastutil.chars.Char2CharFunction;
+import it.unimi.dsi.fastutil.chars.Char2IntFunction;
+import it.unimi.dsi.fastutil.chars.Char2LongFunction;
 import me.sizableshrimp.adventofcode2021.templates.Coordinate;
 import me.sizableshrimp.adventofcode2021.templates.EnumState;
 
@@ -32,8 +34,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.LongFunction;
 import java.util.function.Predicate;
 
 public class GridHelper {
@@ -122,20 +122,20 @@ public class GridHelper {
         return grid;
     }
 
-    public static int[][] convertInt(List<String> lines, IntFunction<Character> func) {
+    public static int[][] convertInt(List<String> lines, Char2IntFunction func) {
         return convertInt(new int[lines.size()][lines.get(0).length()], lines, func);
     }
 
-    public static int[][] convertInt(int[][] grid, List<String> lines, IntFunction<Character> func) {
+    public static int[][] convertInt(int[][] grid, List<String> lines, Char2IntFunction func) {
         convert(lines, (y, x, c) -> grid[y][x] = func.apply(c));
         return grid;
     }
 
-    public static long[][] convertLong(List<String> lines, LongFunction<Character> func) {
+    public static long[][] convertLong(List<String> lines, Char2LongFunction func) {
         return convertLong(new long[lines.size()][lines.get(0).length()], lines, func);
     }
 
-    public static long[][] convertLong(long[][] grid, List<String> lines, LongFunction<Character> func) {
+    public static long[][] convertLong(long[][] grid, List<String> lines, Char2LongFunction func) {
         convert(lines, (y, x, c) -> grid[y][x] = func.apply(c));
         return grid;
     }
