@@ -296,11 +296,47 @@ public class GridHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T[][] copy(T[][] base) {
-        T[][] copy = (T[][]) Array.newInstance(base.getClass().getComponentType(), base.length);
-        for (int i = 0; i < base.length; i++) {
-            T[] ts = base[i];
+    public static <T> T[][] copy(T[][] original) {
+        T[][] copy = (T[][]) Array.newInstance(original.getClass().getComponentType(), original.length);
+        for (int i = 0; i < original.length; i++) {
+            T[] ts = original[i];
             copy[i] = Arrays.copyOf(ts, ts.length);
+        }
+        return copy;
+    }
+
+    public static int[][] copy(int[][] original) {
+        int[][] copy = new int[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            int[] row = original[i];
+            copy[i] = Arrays.copyOf(row, row.length);
+        }
+        return copy;
+    }
+
+    public static long[][] copy(long[][] original) {
+        long[][] copy = new long[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            long[] row = original[i];
+            copy[i] = Arrays.copyOf(row, row.length);
+        }
+        return copy;
+    }
+
+    public static boolean[][] copy(boolean[][] original) {
+        boolean[][] copy = new boolean[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            boolean[] row = original[i];
+            copy[i] = Arrays.copyOf(row, row.length);
+        }
+        return copy;
+    }
+
+    public static char[][] copy(char[][] original) {
+        char[][] copy = new char[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            char[] row = original[i];
+            copy[i] = Arrays.copyOf(row, row.length);
         }
         return copy;
     }
