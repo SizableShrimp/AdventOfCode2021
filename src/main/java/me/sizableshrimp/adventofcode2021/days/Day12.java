@@ -60,28 +60,19 @@ public class Day12 extends Day {
             }
 
             Collection<String> currentPaths = cavePaths.get(current);
-            Set<String> possible = new HashSet<>();
-            Set<String> secondSmallPossibles = node.secondSmall == null ? new HashSet<>() : null;
 
             for (String cave : currentPaths) {
                 if ("start".equals(cave))
                     continue;
                 if (node.path.contains(cave) && isSmall(cave)) {
-                    if (secondSmallPossibles != null)
-                        secondSmallPossibles.add(cave);
+                    if (node.secondSmall == null) {
+                        List<String> newPath = new ArrayList<>(node.path);
+                        newPath.add(cave);
+                        queue.add(new Node(newPath, cave));
+                    }
                     continue;
                 }
-                possible.add(cave);
-            }
 
-            if (secondSmallPossibles != null) {
-                for (String cave : secondSmallPossibles) {
-                    List<String> newPath = new ArrayList<>(node.path);
-                    newPath.add(cave);
-                    queue.add(new Node(newPath, cave));
-                }
-            }
-            for (String cave : possible) {
                 List<String> newPath = new ArrayList<>(node.path);
                 newPath.add(cave);
                 queue.add(new Node(newPath, node.secondSmall));
