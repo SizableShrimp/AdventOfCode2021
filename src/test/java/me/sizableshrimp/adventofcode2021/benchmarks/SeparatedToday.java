@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 @Warmup(time = 4)
 @Fork(value = 3, warmups = 1)
 @Measurement(iterations = 3, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
-public class TodaySeparated {
+public class SeparatedToday {
     @Benchmark
     public void parseToday(DayState state) {
         state.instance.parseTesting();

@@ -23,21 +23,22 @@
 
 package me.sizableshrimp.adventofcode2021.days;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
-import lombok.Data;
+import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenCustomHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import me.sizableshrimp.adventofcode2021.templates.Day;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Day12 extends Day {
-    private Multimap<String, String> cavePaths;
+    private long smallCaves;
+    private Long2ObjectMap<LongSet> cavePaths;
+    private long startId;
+    private long endId;
 
     public static void main(String[] args) {
         new Day12().run();
@@ -45,53 +46,90 @@ public class Day12 extends Day {
 
     @Override
     protected Result evaluate() {
-        Deque<Node> queue = new ArrayDeque<>();
-        Set<Node> validPaths = new HashSet<>();
+        List<Node> validPaths = new ArrayList<>();
 
-        queue.add(new Node(List.of("start"), null));
-
-        while (!queue.isEmpty()) {
-            Node node = queue.removeLast();
-            String current = node.path.get(node.path.size() - 1);
-
-            if ("end".equals(current)) {
-                validPaths.add(node);
-                continue;
-            }
-
-            Collection<String> currentPaths = cavePaths.get(current);
-
-            for (String cave : currentPaths) {
-                if ("start".equals(cave))
-                    continue;
-                if (node.path.contains(cave) && isSmall(cave)) {
-                    if (node.secondSmall == null) {
-                        List<String> newPath = new ArrayList<>(node.path);
-                        newPath.add(cave);
-                        queue.add(new Node(newPath, cave));
-                    }
-                    continue;
-                }
-
-                List<String> newPath = new ArrayList<>(node.path);
-                newPath.add(cave);
-                queue.add(new Node(newPath, node.secondSmall));
-            }
-        }
+        traverse(new Node(startId, startId, -1), validPaths);
 
         return Result.of(getPart1Count(validPaths), validPaths.size());
     }
 
-    private long getPart1Count(Set<Node> validPaths) {
+    private void traverse(Node node, List<Node> validPaths) {
+        long current = node.current;
+
+        if (endId == current) {
+            validPaths.add(node);
+            return;
+        }
+
+        LongSet currentPaths = cavePaths.get(current);
+
+        for (long cave : currentPaths) {
+            if (cave == startId)
+                continue;
+            if (containsCave(node.visited, cave) && containsCave(smallCaves, cave)) {
+                if (node.secondSmall == -1) {
+                    traverse(new Node(getNewVisited(node, cave), cave, cave), validPaths);
+                }
+                continue;
+            }
+
+            traverse(new Node(getNewVisited(node, cave), cave, node.secondSmall), validPaths);
+        }
+    }
+
+    private long getNewVisited(Node node, long cave) {
+        return node.visited | cave;
+    }
+
+    private boolean containsCave(long visited, long cave) {
+        return (visited & cave) == cave;
+    }
+
+    private long getPart1Count(List<Node> validPaths) {
         int count = 0;
         for (Node path : validPaths) {
-            if (path.secondSmall == null)
+            if (path.secondSmall == -1)
                 count++;
         }
         return count;
     }
 
-    private boolean isSmall(String in) {
+    @Override
+    protected void parse() {
+        List<String> caves = new ArrayList<>();
+        smallCaves = 0L;
+        cavePaths = new Long2ObjectOpenHashMap<>();
+
+        for (String line : lines) {
+            String[] split = line.split("-");
+            long a = getCaveId(caves, split[0]);
+            long b = getCaveId(caves, split[1]);
+            cavePaths.computeIfAbsent(a, k -> new LongOpenHashSet()).add(b);
+            cavePaths.computeIfAbsent(b, k -> new LongOpenHashSet()).add(a);
+        }
+
+        startId = 1L << caves.indexOf("start");
+        endId = 1L << caves.indexOf("end");
+    }
+
+    private long getCaveId(List<String> caves, String cave) {
+        int id = caves.indexOf(cave);
+        long shifted;
+
+        if (id == -1) {
+            id = caves.size();
+            shifted = 1L << id;
+            caves.add(cave);
+            if (allLowercase(cave))
+                smallCaves |= shifted;
+        } else {
+            shifted = 1L << id;
+        }
+
+        return shifted;
+    }
+
+    private boolean allLowercase(String in) {
         for (int i = 0; i < in.length(); i++) {
             if (!Character.isLowerCase(in.charAt(i)))
                 return false;
@@ -100,19 +138,5 @@ public class Day12 extends Day {
         return true;
     }
 
-    @Override
-    protected void parse() {
-        cavePaths = MultimapBuilder.hashKeys().hashSetValues().build();
-        for (String line : lines) {
-            String[] split = line.split("-");
-            cavePaths.put(split[0], split[1]);
-            cavePaths.put(split[1], split[0]);
-        }
-    }
-
-    @Data
-    private class Node {
-        final List<String> path;
-        final String secondSmall;
-    }
+    private record Node(long visited, long current, long secondSmall) {}
 }
