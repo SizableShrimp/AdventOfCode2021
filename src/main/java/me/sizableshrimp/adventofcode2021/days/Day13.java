@@ -68,7 +68,7 @@ public class Day13 extends Day {
                 part1 = coords.size();
         }
 
-        return Result.of(part1, "\n" + Printer.toString(coords, (contains, coord) -> contains ? "##" : ".."));
+        return Result.of(part1, "\n" + Printer.toString(coords, (contains, coord) -> contains ? "██" : "  "));
     }
 
     @Override
