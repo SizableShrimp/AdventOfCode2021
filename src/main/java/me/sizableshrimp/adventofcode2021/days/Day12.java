@@ -27,12 +27,12 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
-import me.sizableshrimp.adventofcode2021.templates.Day;
+import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Day12 extends Day {
+public class Day12 extends SeparatedDay {
     private int smallCaves;
     private Int2ObjectMap<IntSet> cavePaths;
     private int startId;
@@ -43,8 +43,17 @@ public class Day12 extends Day {
     }
 
     @Override
-    protected Result evaluate() {
-        return Result.of(traverse(startId, startId, -1, false), traverse(startId, startId, -1, true));
+    protected Object part1() {
+        return traverse(false);
+    }
+
+    @Override
+    protected Object part2() {
+        return traverse(true);
+    }
+
+    private int traverse(boolean allowSecondSmallCave) {
+        return traverse(startId, startId, -1, allowSecondSmallCave);
     }
 
     private int traverse(int visited, int current, int secondSmall, boolean allowSecondSmallCave) {
