@@ -27,14 +27,16 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
+import me.sizableshrimp.adventofcode2021.templates.Coordinate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class LineConvert {
+    public static final Pattern NUMBER = Pattern.compile("-?\\d+");
+
     /**
      * Find all integers in a line.
      *
@@ -42,7 +44,7 @@ public class LineConvert {
      * @return The integers found in the line.
      */
     public static IntList ints(String line) {
-        Matcher m = Pattern.compile("-?\\d+").matcher(line);
+        Matcher m = NUMBER.matcher(line);
         IntList result = new IntArrayList();
         while (m.find()) {
             result.add(Integer.parseInt(m.group(0)));
@@ -61,7 +63,7 @@ public class LineConvert {
     }
 
     public static LongList longs(String line) {
-        Matcher m = Pattern.compile("-?\\d+").matcher(line);
+        Matcher m = NUMBER.matcher(line);
         LongList result = new LongArrayList();
         while (m.find()) {
             result.add(Long.parseLong(m.group(0)));
@@ -73,5 +75,9 @@ public class LineConvert {
         return s.chars()
                 .mapToObj(i -> (char) i)
                 .collect(Collectors.toList());
+    }
+
+    public static Coordinate coordinate(String coord) {
+        return Coordinate.parse(coord);
     }
 }

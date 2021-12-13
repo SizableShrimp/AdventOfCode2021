@@ -150,57 +150,27 @@ public class GridHelper {
     }
 
     public static <T> void print(T[][] grid) {
-        for (T[] ts : grid) {
-            for (T t : ts) {
-                System.out.print(t);
-            }
-            System.out.println();
-        }
+        System.out.print(Printer.toString(grid));
     }
 
     public static <T extends Enum<T> & EnumState<T>> void print(T[][] grid) {
-        for (T[] ts : grid) {
-            for (T t : ts) {
-                System.out.print(t.getMappedChar());
-            }
-            System.out.println();
-        }
+        System.out.print(Printer.toString(grid));
     }
 
     public static void print(int[][] grid) {
-        for (int[] ts : grid) {
-            for (int t : ts) {
-                System.out.print(t);
-            }
-            System.out.println();
-        }
+        System.out.print(Printer.toString(grid));
     }
 
     public static void print(long[][] grid) {
-        for (long[] ts : grid) {
-            for (long t : ts) {
-                System.out.print(t);
-            }
-            System.out.println();
-        }
+        System.out.print(Printer.toString(grid));
     }
 
     public static void print(boolean[][] grid) {
-        for (boolean[] ts : grid) {
-            for (boolean t : ts) {
-                System.out.print(t);
-            }
-            System.out.println();
-        }
+        System.out.print(Printer.toString(grid));
     }
 
     public static void print(char[][] grid) {
-        for (char[] ts : grid) {
-            for (char t : ts) {
-                System.out.print(t);
-            }
-            System.out.println();
-        }
+        System.out.print(Printer.toString(grid));
     }
 
     public static <T> int countOccurrences(T[][] grid, T target) {

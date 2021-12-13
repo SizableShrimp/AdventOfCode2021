@@ -37,8 +37,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class Parser {
-    private static final Pattern pattern = Pattern.compile("(\\d+,\\d+)");
-    private static final HashMap<String, Pattern> CACHED_PATTERNS = new HashMap<>();
+    public static final Pattern COORDINATE_PATTERN = Pattern.compile("(\\d+,\\d+)");
 
     /**
      * Attempts to find every coordinate in the provided line and returns them in a list, in order.
@@ -48,7 +47,7 @@ public class Parser {
      */
     public static List<Coordinate> parseCoordinates(String line) {
         ArrayList<Coordinate> coordinates = new ArrayList<>();
-        Matcher matcher = pattern.matcher(line);
+        Matcher matcher = COORDINATE_PATTERN.matcher(line);
 
         while (matcher.find()) {
             coordinates.add(Coordinate.parse(matcher.group(1)));
@@ -111,6 +110,10 @@ public class Parser {
         return new MatchWrapper(matcher.toMatchResult());
     }
 
+    public static MatchWrapper findFirstMatch(Pattern pattern, String input) {
+        return parseMatch(pattern.matcher(input), true);
+    }
+
     /**
      * Parses each line from the input list using the provided pattern and {@link Matcher#find}.
      *
@@ -132,26 +135,5 @@ public class Parser {
                 return t;
         }
         throw new IllegalArgumentException();
-    }
-
-    /**
-     * Creates a {@link Matcher} from the provided regex {@link String} and {@link String} input.
-     * The regex string is compiled to a {@link Pattern} and cached for optimization purposes.
-     * The returned value will be a {@link MatchWrapper} that wraps a {@link MatchResult}
-     * with overloaded helper functions.
-     *
-     * @param regex The regex {@link String} used to match the provided input.
-     * This string is compiled to a {@link Pattern} and cached for optimization purposes.
-     * @param input The {@link String} input to be matched against the pattern.
-     * @return A {@link MatchWrapper} that wraps a {@link MatchResult}
-     */
-    public static MatchWrapper parseMatch(String regex, String input) {
-        Pattern pattern = CACHED_PATTERNS.computeIfAbsent(regex, Pattern::compile);
-        return parseMatch(pattern.matcher(input));
-    }
-
-    public static MatchWrapper findFirstMatch(String regex, String input) {
-        Pattern pattern = CACHED_PATTERNS.computeIfAbsent(regex, Pattern::compile);
-        return parseMatch(pattern.matcher(input), true);
     }
 }

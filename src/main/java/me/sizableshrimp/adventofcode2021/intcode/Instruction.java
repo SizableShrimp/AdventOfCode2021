@@ -29,9 +29,11 @@ import me.sizableshrimp.adventofcode2021.helper.Parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Value
 public class Instruction {
+    public static final Pattern INSTRUCTION_PATTERN = Pattern.compile("(\\w+?) (.+?)");
     int index;
     OpCode code;
     int[] args;
@@ -48,7 +50,7 @@ public class Instruction {
     }
 
     public static Instruction parse(int index, String line) {
-        MatchWrapper match = Parser.parseMatch("(\\w+?) (.+?)", line);
+        MatchWrapper match = Parser.parseMatch(INSTRUCTION_PATTERN, line);
 
         OpCode code = OpCode.getOpCode(match.group(1));
 
