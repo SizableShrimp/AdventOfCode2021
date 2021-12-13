@@ -23,22 +23,20 @@
 
 package me.sizableshrimp.adventofcode2021.days;
 
-import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenCustomHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import me.sizableshrimp.adventofcode2021.templates.Day;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Day12 extends Day {
-    private long smallCaves;
-    private Long2ObjectMap<LongSet> cavePaths;
-    private long startId;
-    private long endId;
+    private int smallCaves;
+    private Int2ObjectMap<IntSet> cavePaths;
+    private int startId;
+    private int endId;
 
     public static void main(String[] args) {
         new Day12().run();
@@ -46,84 +44,66 @@ public class Day12 extends Day {
 
     @Override
     protected Result evaluate() {
-        List<Node> validPaths = new ArrayList<>();
-
-        traverse(new Node(startId, startId, -1), validPaths);
-
-        return Result.of(getPart1Count(validPaths), validPaths.size());
+        return Result.of(traverse(startId, startId, -1, false), traverse(startId, startId, -1, true));
     }
 
-    private void traverse(Node node, List<Node> validPaths) {
-        long current = node.current;
+    private int traverse(int visited, int current, int secondSmall, boolean allowSecondSmallCave) {
+        if (endId == current)
+            return 1;
 
-        if (endId == current) {
-            validPaths.add(node);
-            return;
-        }
+        IntSet currentPaths = cavePaths.get(current);
+        int count = 0;
 
-        LongSet currentPaths = cavePaths.get(current);
-
-        for (long cave : currentPaths) {
+        for (int cave : currentPaths) {
             if (cave == startId)
                 continue;
-            if (containsCave(node.visited, cave) && containsCave(smallCaves, cave)) {
-                if (node.secondSmall == -1) {
-                    traverse(new Node(getNewVisited(node, cave), cave, cave), validPaths);
+            if (containsCave(visited, cave) && containsCave(smallCaves, cave)) {
+                if (allowSecondSmallCave && secondSmall == -1) {
+                    count += traverse(visited | cave, cave, cave, true);
                 }
                 continue;
             }
 
-            traverse(new Node(getNewVisited(node, cave), cave, node.secondSmall), validPaths);
+            count += traverse(visited | cave, cave, secondSmall, allowSecondSmallCave);
         }
-    }
 
-    private long getNewVisited(Node node, long cave) {
-        return node.visited | cave;
-    }
-
-    private boolean containsCave(long visited, long cave) {
-        return (visited & cave) == cave;
-    }
-
-    private long getPart1Count(List<Node> validPaths) {
-        int count = 0;
-        for (Node path : validPaths) {
-            if (path.secondSmall == -1)
-                count++;
-        }
         return count;
+    }
+
+    private boolean containsCave(int visited, int cave) {
+        return (visited & cave) == cave;
     }
 
     @Override
     protected void parse() {
         List<String> caves = new ArrayList<>();
-        smallCaves = 0L;
-        cavePaths = new Long2ObjectOpenHashMap<>();
+        smallCaves = 0;
+        cavePaths = new Int2ObjectOpenHashMap<>();
 
         for (String line : lines) {
             String[] split = line.split("-");
-            long a = getCaveId(caves, split[0]);
-            long b = getCaveId(caves, split[1]);
-            cavePaths.computeIfAbsent(a, k -> new LongOpenHashSet()).add(b);
-            cavePaths.computeIfAbsent(b, k -> new LongOpenHashSet()).add(a);
+            int a = getCaveId(caves, split[0]);
+            int b = getCaveId(caves, split[1]);
+            cavePaths.computeIfAbsent(a, k -> new IntOpenHashSet()).add(b);
+            cavePaths.computeIfAbsent(b, k -> new IntOpenHashSet()).add(a);
         }
 
-        startId = 1L << caves.indexOf("start");
-        endId = 1L << caves.indexOf("end");
+        startId = 1 << caves.indexOf("start");
+        endId = 1 << caves.indexOf("end");
     }
 
-    private long getCaveId(List<String> caves, String cave) {
+    private int getCaveId(List<String> caves, String cave) {
         int id = caves.indexOf(cave);
-        long shifted;
+        int shifted;
 
         if (id == -1) {
             id = caves.size();
-            shifted = 1L << id;
+            shifted = 1 << id;
             caves.add(cave);
             if (allLowercase(cave))
                 smallCaves |= shifted;
         } else {
-            shifted = 1L << id;
+            shifted = 1 << id;
         }
 
         return shifted;
@@ -137,6 +117,4 @@ public class Day12 extends Day {
 
         return true;
     }
-
-    private record Node(long visited, long current, long secondSmall) {}
 }
