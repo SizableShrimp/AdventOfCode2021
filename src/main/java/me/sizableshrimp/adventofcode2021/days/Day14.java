@@ -23,16 +23,12 @@
 
 package me.sizableshrimp.adventofcode2021.days;
 
-import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.chars.Char2LongMap;
-import it.unimi.dsi.fastutil.chars.Char2LongMaps;
 import it.unimi.dsi.fastutil.chars.Char2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2CharMap;
 import it.unimi.dsi.fastutil.ints.Int2CharOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2CharMap;
-import it.unimi.dsi.fastutil.objects.Object2CharOpenHashMap;
 import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
 public class Day14 extends SeparatedDay {
@@ -78,16 +74,16 @@ public class Day14 extends SeparatedDay {
     }
 
     private Char2LongMap calculate(char a, char b, int depth) {
-        if (depth == 0)
-            return Char2LongMaps.EMPTY_MAP;
         int hash = hashNode(a, b, depth);
         if (cache.containsKey(hash))
             return cache.get(hash);
 
         Char2LongOpenHashMap quantities = new Char2LongOpenHashMap();
         char c = insertions.get(hashChars(a, b));
-        mergeAll(quantities, calculate(a, c, depth - 1));
-        mergeAll(quantities, calculate(c, b, depth - 1));
+        if (depth > 1) {
+            mergeAll(quantities, calculate(a, c, depth - 1));
+            mergeAll(quantities, calculate(c, b, depth - 1));
+        }
         // if (depth == 1)
         //     quantities.mergeLong(b, 1, Long::sum);
         // quantities.mergeLong(a, -1, Long::sum);
