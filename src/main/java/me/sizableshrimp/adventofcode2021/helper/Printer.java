@@ -27,16 +27,16 @@ import it.unimi.dsi.fastutil.booleans.Boolean2CharFunction;
 import me.sizableshrimp.adventofcode2021.templates.Coordinate;
 import me.sizableshrimp.adventofcode2021.templates.EnumState;
 
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
 
 public class Printer {
-    public static String toString(Set<Coordinate> coords) {
+    public static String toString(Collection<Coordinate> coords) {
         return toString(coords, (contains, coord) -> contains ? "#" : ".");
     }
 
-    public static String toString(Set<Coordinate> coords, Coordinate2StringFunction function) {
+    public static String toString(Collection<Coordinate> coords, Coordinate2StringFunction function) {
         int maxX = Integer.MIN_VALUE;
         int maxY = Integer.MIN_VALUE;
         for (Coordinate coord : coords) {

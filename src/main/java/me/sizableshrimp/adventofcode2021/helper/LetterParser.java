@@ -73,6 +73,14 @@ public class LetterParser {
         LETTER_MAP = Int2CharMaps.unmodifiable(letterMap);
     }
 
+    /**
+     * @return the letters in the grid, additionally appending a display of the grid if a letter cannot be parsed.
+     */
+    public static String getLettersOrGrid(Collection<Coordinate> coords) {
+        String letters = getLetters(coords);
+        return letters.indexOf('?') == -1 ? letters : letters + "\n" + Printer.toString(coords, (contains, coord) -> contains ? "██" : "  ");
+    }
+
     public static String getLetters(Collection<Coordinate> coords) {
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
