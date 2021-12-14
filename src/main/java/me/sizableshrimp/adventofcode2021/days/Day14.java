@@ -55,7 +55,7 @@ public class Day14 extends SeparatedDay {
         int length = template.length();
         for (int i = 0; i < length; i++) {
             char a = template.charAt(i);
-            // We don't account for the starting template's character count so do it here
+            // We don't account for the starting template's character count, so do it here
             quantities.mergeLong(a, 1, Long::sum);
             if (i < length - 1)
                 mergeAll(quantities, calculate(a, template.charAt(i + 1), steps));
@@ -84,9 +84,6 @@ public class Day14 extends SeparatedDay {
             mergeAll(quantities, calculate(a, c, depth - 1));
             mergeAll(quantities, calculate(c, b, depth - 1));
         }
-        // if (depth == 1)
-        //     quantities.mergeLong(b, 1, Long::sum);
-        // quantities.mergeLong(a, -1, Long::sum);
         quantities.mergeLong(c, 1, Long::sum);
         cache.put(hash, quantities);
 
