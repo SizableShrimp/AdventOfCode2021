@@ -49,11 +49,6 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
 public class SeparatedToday {
     @Benchmark
-    public void parseToday(DayState state) {
-        state.instance.parseTesting();
-    }
-
-    @Benchmark
     public void part1Today(DayState state) {
         state.instance.part1Testing();
     }
@@ -61,6 +56,11 @@ public class SeparatedToday {
     @Benchmark
     public void part2Today(DayState state) {
         state.instance.part2Testing();
+    }
+
+    @Benchmark
+    public void parseToday(DayState state) {
+        state.instance.parseTesting();
     }
 
     @State(Scope.Thread)

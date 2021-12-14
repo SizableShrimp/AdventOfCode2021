@@ -23,6 +23,7 @@
 
 package me.sizableshrimp.adventofcode2021.days;
 
+import me.sizableshrimp.adventofcode2021.helper.LetterParser;
 import me.sizableshrimp.adventofcode2021.helper.LineConvert;
 import me.sizableshrimp.adventofcode2021.helper.Printer;
 import me.sizableshrimp.adventofcode2021.templates.Coordinate;
@@ -68,7 +69,7 @@ public class Day13 extends Day {
                 part1 = coords.size();
         }
 
-        return Result.of(part1, "\n" + Printer.toString(coords, (contains, coord) -> contains ? "██" : "  "));
+        return Result.of(part1, LetterParser.getLetters(coords) + "\n" + Printer.toString(coords, (contains, coord) -> contains ? "██" : "  "));
     }
 
     @Override
