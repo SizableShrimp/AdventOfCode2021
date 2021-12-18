@@ -134,7 +134,7 @@ public class Coordinate {
      * @return The Manhattan distance from this coordinate to the origin at (0, 0).
      */
     public int distanceToOrigin() {
-        return distance(0, 0);
+        return x + y;
     }
 
     /**
