@@ -23,176 +23,246 @@
 
 package me.sizableshrimp.adventofcode2021.days;
 
-import me.sizableshrimp.adventofcode2021.helper.Itertools;
-import me.sizableshrimp.adventofcode2021.helper.MatchWrapper;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Day18 extends SeparatedDay {
-    private static final Pattern REGULAR_PAIR_PATTERN = Pattern.compile("\\[(\\d+),(\\d+)]");
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
-
     public static void main(String[] args) {
         new Day18().run();
     }
 
     @Override
     protected Object part1() {
-        StringBuilder cur = new StringBuilder(lines.get(0));
+        Token start = parseToken(lines.get(0));
 
         for (int i = 1; i < lines.size(); i++) {
-            cur.insert(0, '[').append(',').append(lines.get(i)).append(']');
-            reduce(cur);
+            Token oldStart = start;
+            start = new Open();
+            start.add(oldStart);
+            start.end().add(parseToken(lines.get(i))).end().add(new Close());
+            reduce(start);
         }
 
-        return getMagnitude(cur);
+        return start.getMagnitude();
     }
 
     @Override
     protected Object part2() {
         int max = 0;
 
-        for (List<String> combo : Itertools.combinations(lines, 2)) {
-            String first = combo.get(0);
-            String second = combo.get(1);
-            int magnitude = getPairMagnitude(first, second);
-            if (magnitude > max)
-                max = magnitude;
-            magnitude = getPairMagnitude(second, first);
-            if (magnitude > max)
-                max = magnitude;
+        for (int i = 0; i < lines.size(); i++) {
+            String first = lines.get(i);
+            for (int j = 0; j < lines.size(); j++) {
+                if (i == j)
+                    continue;
+                String second = lines.get(j);
+                max = Math.max(max, getPairMagnitude(first, second));
+                max = Math.max(max, getPairMagnitude(second, first));
+            }
         }
 
         return max;
     }
 
     private int getPairMagnitude(String first, String second) {
-        StringBuilder cur = new StringBuilder(first).insert(0, '[').append(',').append(second).append(']');
-        reduce(cur);
-        int magnitude = getMagnitude(cur);
-        return magnitude;
+        Token start = parseToken('[' + first + ',' + second + ']');
+        reduce(start);
+        return start.getMagnitude();
     }
 
-    private void reduce(StringBuilder cur) {
+    private void reduce(Token start) {
         boolean changed;
         do {
-            changed = false;
-            int nestIdx = getNestIndex(cur);
-            if (nestIdx != -1) {
-                Matcher matcher = REGULAR_PAIR_PATTERN.matcher(cur);
-                if (!matcher.find(nestIdx))
-                    throw new IllegalStateException();
-                MatchWrapper result = new MatchWrapper(matcher);
-                int left = result.groupInt(1);
-                int right = result.groupInt(2);
-                cur.replace(result.start(), result.end(), "0");
-                int lefterIdx = getLefterIndex(cur, result.start() - 1);
-                int righterIdx = getRighterIndex(cur, result.start() + 1);
-                if (lefterIdx != -1)
-                    addNumber(cur, lefterIdx, left);
-                if (righterIdx != -1)
-                    addNumber(cur, righterIdx, right);
-                changed = true;
-                continue;
-            }
-            Matcher matcher = NUMBER_PATTERN.matcher(cur);
-            MatchWrapper result = new MatchWrapper(matcher);
-            while (matcher.find()) {
-                int value = result.groupInt(0);
-                if (value >= 10) {
-                    int down = value / 2;
-                    int up = value % 2 == 0 ? down : (value / 2 + 1);
-                    cur.replace(result.start(), result.end(), "[" + down + "," + up + "]");
-                    changed = true;
-                    break;
-                }
-            }
+            changed = reduceOnce(start);
         } while (changed);
     }
 
-    private int getMagnitude(StringBuilder cur) {
-        return getMagnitude(cur, 0, cur.length());
+    private boolean reduceOnce(Token start) {
+        return reduceExplode(start) || reduceSplit(start);
     }
 
-    private int getMagnitude(StringBuilder cur, int start, int end) {
-        int value = getNumber(cur.substring(start, end));
-        if (value != -1)
-            return value;
-        int comma = getCommaIndex(cur, start, end);
-        return 3 * getMagnitude(cur, start + 1, comma) + 2 * getMagnitude(cur, comma + 1, end - 1);
-    }
-
-    private int getNumber(String s) {
-        try {
-            return Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-
-    private void addNumber(StringBuilder cur, int index, int add) {
-        Matcher matcher = NUMBER_PATTERN.matcher(cur);
-        if (!matcher.find(index))
-            throw new IllegalStateException();
-        MatchWrapper result = new MatchWrapper(matcher);
-        int currentValue = result.groupInt(0);
-        cur.replace(result.start(), result.end(), Integer.toString(currentValue + add));
-    }
-
-    private int getLefterIndex(StringBuilder cur, int start) {
-        for (int i = start; i > 0; i--) {
-            char c = cur.charAt(i);
-            boolean wasDigit = Character.isDigit(c);
-            while (Character.isDigit(c)) {
-                i--;
-                c = cur.charAt(i);
-            }
-            if (wasDigit)
-                return i + 1;
-        }
-
-        return -1;
-    }
-
-    private int getRighterIndex(StringBuilder cur, int start) {
-        for (int i = start; i < cur.length(); i++) {
-            char c = cur.charAt(i);
-            if (Character.isDigit(c))
-                return i;
-        }
-
-        return -1;
-    }
-
-    private int getNestIndex(StringBuilder cur) {
-        return getIndex(cur, '[', 0, cur.length(), 5);
-    }
-
-    private int getCommaIndex(StringBuilder cur, int start, int end) {
-        return getIndex(cur, ',', start, end, 1);
-    }
-
-    private int getIndex(StringBuilder cur, char targetChar, int start, int end, int target) {
+    private boolean reduceExplode(Token start) {
+        Token cur = start;
         int depth = 0;
 
-        for (int i = start; i < end; i++) {
-            char c = cur.charAt(i);
-            switch (c) {
-                case '[' -> depth++;
-                case ']' -> depth--;
+        while (cur != null) {
+            if (cur instanceof Open) {
+                depth++;
+            } else if (cur instanceof Close) {
+                depth--;
             }
-            if (c == targetChar && depth == target)
-                return i;
+
+            if (depth >= 5) {
+                Token explodeStart = cur;
+                while (!(explodeStart instanceof Value) || !(explodeStart.next() instanceof Value)) {
+                    explodeStart = explodeStart.next();
+                }
+                int leftValue = ((Value) explodeStart).value();
+                int rightValue = ((Value) explodeStart.next()).value();
+                Value empty = new Value(0);
+                Token beforeOpen = explodeStart.prev().prev();
+                Token afterClose = explodeStart.next().next().next();
+                beforeOpen.add(empty).add(afterClose);
+                Value left = getLeftValue(explodeStart);
+                Value right = getRightValue(explodeStart.next());
+                if (left != null)
+                    left.value += leftValue;
+                if (right != null)
+                    right.value += rightValue;
+                return true;
+            }
+            cur = cur.next();
         }
 
-        return -1;
+        return false;
     }
 
-    @Override
-    protected void parse() {
-        super.parse();
+    private boolean reduceSplit(Token start) {
+        Token cur = start;
+        while (cur != null) {
+            if (cur instanceof Value valueToken) {
+                int value = valueToken.value();
+                if (value >= 10) {
+                    int down = value / 2;
+                    int up = value % 2 == 0 ? down : (value / 2 + 1);
+                    Token oldNext = valueToken.next();
+                    valueToken.prev().add(new Open()).add(new Value(down)).add(new Value(up)).add(new Close()).add(oldNext);
+                    return true;
+                }
+            }
+            cur = cur.next();
+        }
+
+        return false;
+    }
+
+    private Value getLeftValue(Token token) {
+        Token cur = token.prev();
+        while (cur != null) {
+            if (cur instanceof Value value)
+                return value;
+            cur = cur.prev();
+        }
+
+        return null;
+    }
+
+    private Value getRightValue(Token token) {
+        Token cur = token.next();
+        while (cur != null) {
+            if (cur instanceof Value value)
+                return value;
+            cur = cur.next();
+        }
+
+        return null;
+    }
+
+    private Token parseToken(String s) {
+        Token start = null;
+        Token cur = null;
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            Token prev = cur;
+            if (c == '[') {
+                cur = new Open();
+            } else if (c == ']') {
+                cur = new Close();
+            } else if (Character.isDigit(c)) {
+                int num = 0;
+                do {
+                    num = num * 10 + c - '0';
+                    i++;
+                    c = s.charAt(i);
+                } while (Character.isDigit(c));
+                i--;
+                cur = new Value(num);
+            } else {
+                continue;
+            }
+            if (start == null)
+                start = cur;
+            if (prev != null)
+                prev.add(cur);
+        }
+
+        return start;
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    @Accessors(fluent = true, chain = false)
+    @EqualsAndHashCode
+    private abstract static sealed class Token permits Open, Close, Value {
+        Token prev;
+        Token next;
+
+        int getMagnitude() {
+            Token left = this.next();
+            Token right;
+            if (left instanceof Value) {
+                right = left.next();
+            } else {
+                right = left;
+                int depth = 0;
+                do {
+                    if (right instanceof Open) {
+                        depth++;
+                    } else if (right instanceof Close) {
+                        depth--;
+                    }
+                    right = right.next();
+                } while (depth != 0);
+            }
+            return 3 * (left instanceof Value value ? value.value() : left.getMagnitude()) + 2 * (right instanceof Value value ? value.value() : right.getMagnitude());
+        }
+
+        Token end() {
+            Token cur = this;
+            while (cur.next != null) {
+                cur = cur.next;
+            }
+            return cur;
+        }
+
+        <T extends Token> T add(T next) {
+            this.next = next;
+            next.prev = this;
+            return next;
+        }
+    }
+
+    private static final class Open extends Token {
+        @Override
+        public String toString() {
+            return "[" + next;
+        }
+    }
+
+    private static final class Close extends Token {
+        @Override
+        public String toString() {
+            if (next == null)
+                return "]";
+            return "]" + (next instanceof Close ? next.toString() : "," + next);
+        }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Accessors(fluent = true, chain = false)
+    @EqualsAndHashCode(callSuper = false)
+    private static final class Value extends Token {
+        int value;
+
+        @Override
+        public String toString() {
+            return value + (next instanceof Close ? next.toString() : "," + next);
+        }
     }
 }
