@@ -25,8 +25,13 @@ package me.sizableshrimp.adventofcode2021.days;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntIntImmutablePair;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
+import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import me.sizableshrimp.adventofcode2021.helper.Processor;
 import me.sizableshrimp.adventofcode2021.templates.Day;
 import me.sizableshrimp.adventofcode2021.templates.ZCoordinate;
 
@@ -72,28 +77,33 @@ public class Day19 extends Day {
 
     @Override
     protected Result evaluate() {
+        List<IntList> scannerRelatives = new ArrayList<>();
+        for (Set<ZCoordinate> beacons : scanners) {
+            List<ZCoordinate> beaconsList = new ArrayList<>(beacons);
+            IntList relDist = new IntArrayList();
+            for (int i = 0; i < beaconsList.size(); i++) {
+                ZCoordinate beacon = beaconsList.get(i);
+                // i + 1 prevents against duplicate pair matching
+                for (int j = i + 1; j < beaconsList.size(); j++) {
+                    ZCoordinate other = beaconsList.get(j);
+                    if (beacon == other)
+                        continue;
+                    relDist.add(beacon.distance(other));
+                }
+            }
+            scannerRelatives.add(relDist);
+        }
+
         Int2ObjectMap<Set<Node>> offsets = new Int2ObjectOpenHashMap<>();
-        for (int i = 0; i < scanners.size(); i++) {
-            Set<ZCoordinate> firstSet = scanners.get(i);
-            for (int j = 0; j < scanners.size(); j++) {
+        for (int i = 0; i < scannerRelatives.size(); i++) {
+            IntList relDist = scannerRelatives.get(i);
+            for (int j = 0; j < scannerRelatives.size(); j++) {
                 if (i == j)
                     continue;
-                Set<ZCoordinate> secondSet = scanners.get(j);
-                for (ZCoordinateMutator mutator : ROTATION_REFLECTIONS) {
-                    Object2IntMap<ZCoordinate> map = new Object2IntOpenHashMap<>();
-                    for (ZCoordinate coord : secondSet) {
-                        for (ZCoordinate other : firstSet) {
-                            // Offset = (scanner B reordered coord) - (scanner A normal coord)
-                            // Scanner A normal coord = (scanner B reordered coord) - offset
-                            // Scanner B reordered coord = (scanner A normal coord) + offset
-                            // Reordering -> what we need to do to scanner B's positions to get it to something relative to scanner A
-                            ZCoordinate offset = mutator.apply(coord).subtract(other);
-                            if (map.compute(offset, (k, v) -> v == null ? 1 : v + 1) == 12) {
-                                offsets.computeIfAbsent(i, k -> new HashSet<>()).add(new Node(i, j, c -> mutator.apply(c).subtract(offset)));
-                            }
-                        }
-                    }
-                }
+                IntList other = scannerRelatives.get(j);
+                // Magic number 66 == arithmetic series of 1 to 11, which is the sum of the distances that need to match for 12 beacons/points to overlap
+                if (Processor.intersection(relDist, other).size() >= 66)
+                    computeOffsets(offsets, i, j);
             }
         }
 
@@ -144,6 +154,27 @@ public class Day19 extends Day {
         }
 
         return Result.of(all.size(), maxDist);
+    }
+
+    private void computeOffsets(Int2ObjectMap<Set<Node>> offsets, int scannerA, int scannerB) {
+        Set<ZCoordinate> firstSet = scanners.get(scannerA);
+        Set<ZCoordinate> secondSet = scanners.get(scannerB);
+
+        for (ZCoordinateMutator mutator : ROTATION_REFLECTIONS) {
+            Object2IntMap<ZCoordinate> map = new Object2IntOpenHashMap<>();
+            for (ZCoordinate coord : secondSet) {
+                for (ZCoordinate other : firstSet) {
+                    // Offset = (scanner B reordered coord) - (scanner A normal coord)
+                    // Scanner A normal coord = (scanner B reordered coord) - offset
+                    // Scanner B reordered coord = (scanner A normal coord) + offset
+                    // Reordering -> what we need to do to scanner B's positions to get it to something relative to scanner A
+                    ZCoordinate offset = mutator.apply(coord).subtract(other);
+                    if (map.compute(offset, (k, v) -> v == null ? 1 : v + 1) == 12) {
+                        offsets.computeIfAbsent(scannerA, k -> new HashSet<>()).add(new Node(scannerA, scannerB, c -> mutator.apply(c).subtract(offset)));
+                    }
+                }
+            }
+        }
     }
 
     @Override
