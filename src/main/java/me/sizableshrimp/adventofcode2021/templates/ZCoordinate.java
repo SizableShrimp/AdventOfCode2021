@@ -97,6 +97,10 @@ public class ZCoordinate {
         return distance(other.x, other.y, other.z);
     }
 
+    public ZCoordinate subtract(ZCoordinate other) {
+        return ZCoordinate.of(this.x - other.x, this.y - other.y, this.z - other.z);
+    }
+
     @Override
     public String toString() {
         return String.format("(%d,%d,%d)", x, y, z);
