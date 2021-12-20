@@ -200,7 +200,7 @@ public class GridHelper {
     }
 
     public static <T> boolean isValid(T[][] grid, int x, int y) {
-        return extracted(x, y, grid[0].length, grid.length);
+        return isValid(x, y, grid[0].length, grid.length);
     }
 
     public static boolean isValid(int[][] grid, Coordinate coord) {
@@ -208,7 +208,7 @@ public class GridHelper {
     }
 
     public static boolean isValid(int[][] grid, int x, int y) {
-        return extracted(x, y, grid[0].length, grid.length);
+        return isValid(x, y, grid[0].length, grid.length);
     }
 
     public static boolean isValid(long[][] grid, Coordinate coord) {
@@ -216,7 +216,7 @@ public class GridHelper {
     }
 
     public static boolean isValid(long[][] grid, int x, int y) {
-        return extracted(x, y, grid[0].length, grid.length);
+        return isValid(x, y, grid[0].length, grid.length);
     }
 
     public static boolean isValid(boolean[][] grid, Coordinate coord) {
@@ -224,7 +224,7 @@ public class GridHelper {
     }
 
     public static boolean isValid(boolean[][] grid, int x, int y) {
-        return extracted(x, y, grid[0].length, grid.length);
+        return isValid(x, y, grid[0].length, grid.length);
     }
 
     public static boolean isValid(char[][] grid, Coordinate coord) {
@@ -232,10 +232,10 @@ public class GridHelper {
     }
 
     public static boolean isValid(char[][] grid, int x, int y) {
-        return extracted(x, y, grid[0].length, grid.length);
+        return isValid(x, y, grid[0].length, grid.length);
     }
 
-    private static boolean extracted(int x, int y, int width, int height) {
+    public static boolean isValid(int x, int y, int width, int height) {
         return y >= 0 && y < height && x >= 0 && x < width;
     }
 
