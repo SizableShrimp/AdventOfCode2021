@@ -26,6 +26,7 @@ package me.sizableshrimp.adventofcode2021.helper;
 import it.unimi.dsi.fastutil.chars.Char2CharFunction;
 import it.unimi.dsi.fastutil.chars.Char2IntFunction;
 import it.unimi.dsi.fastutil.chars.Char2LongFunction;
+import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import me.sizableshrimp.adventofcode2021.templates.Coordinate;
 import me.sizableshrimp.adventofcode2021.templates.EnumState;
 
@@ -65,6 +66,7 @@ public class GridHelper {
         }
     }
 
+    // Java doesn't let you make generic arrays... stupid
     @SuppressWarnings("unchecked")
     public static <T extends Enum<T> & EnumState<T>> T[][] convert(BiFunction<Integer, Integer, T[][]> generator, List<String> lines) {
         T[][] grid = generator.apply(lines.size(), lines.get(0).length());
@@ -268,6 +270,15 @@ public class GridHelper {
     @SuppressWarnings("unchecked")
     public static <T> T[][] copy(T[][] original) {
         T[][] copy = (T[][]) Array.newInstance(original.getClass().getComponentType(), original.length);
+        for (int i = 0; i < original.length; i++) {
+            T[] ts = original[i];
+            copy[i] = Arrays.copyOf(ts, ts.length);
+        }
+        return copy;
+    }
+
+    public static <T> T[][] copyFast(Int2ObjectFunction<T[][]> generator, T[][] original) {
+        T[][] copy = generator.apply(original.length);
         for (int i = 0; i < original.length; i++) {
             T[] ts = original[i];
             copy[i] = Arrays.copyOf(ts, ts.length);
