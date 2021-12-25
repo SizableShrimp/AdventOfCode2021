@@ -25,11 +25,9 @@ package me.sizableshrimp.adventofcode2021.days;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import me.sizableshrimp.adventofcode2021.helper.LineConvert;
 import me.sizableshrimp.adventofcode2021.templates.Day;
 
-import java.util.stream.LongStream;
-
+// https://adventofcode.com/2021/day/6 - Lanternfish
 public class Day06 extends Day {
     private IntList startingFish;
 

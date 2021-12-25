@@ -31,6 +31,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
+// https://adventofcode.com/2021/day/14 - Extended Polymerization
 public class Day14 extends SeparatedDay {
     private Int2ObjectMap<Char2LongMap> cache;
     private Int2CharMap insertions;

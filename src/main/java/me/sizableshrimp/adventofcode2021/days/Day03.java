@@ -28,6 +28,7 @@ import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 import java.util.ArrayList;
 import java.util.List;
 
+// https://adventofcode.com/2021/day/3 - Binary Diagnostic
 public class Day03 extends SeparatedDay {
     private int binaryLength;
 

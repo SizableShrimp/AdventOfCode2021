@@ -31,6 +31,7 @@ import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 import java.util.HashSet;
 import java.util.Set;
 
+// https://adventofcode.com/2021/day/17 - Trick Shot
 public class Day17 extends SeparatedDay {
     private Coordinate minTarget;
     private Coordinate maxTarget;

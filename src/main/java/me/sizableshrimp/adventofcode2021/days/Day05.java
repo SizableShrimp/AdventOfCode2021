@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+// https://adventofcode.com/2021/day/5 - Hydrothermal Venture
 public class Day05 extends SeparatedDay {
     public static final Pattern SEGMENT_PATTERN = Pattern.compile("(\\d+),(\\d+) -> (\\d+),(\\d+)");
     private List<Segment> segments;

@@ -29,6 +29,7 @@ import me.sizableshrimp.adventofcode2021.templates.Day;
 
 import java.util.BitSet;
 
+// https://adventofcode.com/2021/day/20 - Trench Map
 public class Day20 extends Day {
     private boolean[][] startingGrid;
     private BitSet algorithm;

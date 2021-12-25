@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+// https://adventofcode.com/2021/day/8 - Seven Segment Search
 public class Day08 extends Day {
     // The product of the overlaps for a given digit and 1, 4, and 8 make for a unique identifier that can be pre-calculated
     // Not my idea; credit goes to /u/4HbQ

@@ -34,6 +34,7 @@ import me.sizableshrimp.adventofcode2021.templates.Day;
 
 import java.util.Map;
 
+// https://adventofcode.com/2021/day/10 - Syntax Scoring
 public class Day10 extends Day {
     private static final Char2CharMap CLOSERS = Char2CharMaps.unmodifiable(new Char2CharOpenHashMap(Map.of('(', ')', '[', ']', '{', '}', '<', '>')));
 

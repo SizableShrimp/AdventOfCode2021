@@ -28,6 +28,7 @@ import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 import java.util.ArrayList;
 import java.util.List;
 
+// https://adventofcode.com/2021/day/2 - Dive!
 public class Day02 extends SeparatedDay {
     private List<Command> commands;
 

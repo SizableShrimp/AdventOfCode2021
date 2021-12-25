@@ -23,8 +23,6 @@
 
 package me.sizableshrimp.adventofcode2021.days;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import me.sizableshrimp.adventofcode2021.templates.Day;
@@ -36,6 +34,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+// https://adventofcode.com/2021/day/24 - Arithmetic Logic Unit
 public class Day24 extends Day {
     private List<List<Instruction>> perInput = new ArrayList<>();
 

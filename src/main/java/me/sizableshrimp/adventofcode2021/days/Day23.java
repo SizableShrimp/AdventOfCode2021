@@ -32,7 +32,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import me.sizableshrimp.adventofcode2021.helper.GridHelper;
 import me.sizableshrimp.adventofcode2021.templates.Coordinate;
-import me.sizableshrimp.adventofcode2021.templates.Day;
 import me.sizableshrimp.adventofcode2021.templates.Direction;
 import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
@@ -49,6 +48,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+// https://adventofcode.com/2021/day/23 - Amphipod
 public class Day23 extends SeparatedDay {
     private static final List<String> PART_TWO_EXTENSION = List.of("  #D#C#B#A#", "  #D#B#A#C#");
     private static final IntList ROOM_COLUMNS = IntList.of(3, 5, 7, 9);

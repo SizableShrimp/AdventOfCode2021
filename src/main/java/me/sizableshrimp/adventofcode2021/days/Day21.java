@@ -32,6 +32,7 @@ import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 import java.util.HashMap;
 import java.util.Map;
 
+// https://adventofcode.com/2021/day/21 - Dirac Dice
 public class Day21 extends SeparatedDay {
     private static final LongLongPair PLAYER_ONE_WINS = LongLongPair.of(1, 0);
     private static final LongLongPair PLAYER_TWO_WINS = LongLongPair.of(0, 1);

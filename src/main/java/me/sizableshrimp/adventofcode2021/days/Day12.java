@@ -32,6 +32,7 @@ import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 import java.util.ArrayList;
 import java.util.List;
 
+// https://adventofcode.com/2021/day/12 - Passage Pathing
 public class Day12 extends SeparatedDay {
     private int smallCaves;
     private Int2ObjectMap<IntSet> cavePaths;

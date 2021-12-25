@@ -27,8 +27,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
-import java.util.Arrays;
-
+// // https://adventofcode.com/2021/day/7 - The Treachery of Whales
 public class Day07 extends SeparatedDay {
     private IntList positions;
 

@@ -31,6 +31,7 @@ import me.sizableshrimp.adventofcode2021.templates.Direction;
 import java.util.HashSet;
 import java.util.Set;
 
+// https://adventofcode.com/2021/day/11 - Dumbo Octopus
 public class Day11 extends Day {
     public static void main(String[] args) {
         new Day11().run();

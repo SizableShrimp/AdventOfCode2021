@@ -27,13 +27,13 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import me.sizableshrimp.adventofcode2021.helper.LineConvert;
-import me.sizableshrimp.adventofcode2021.templates.Day;
 import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 import me.sizableshrimp.adventofcode2021.templates.ZCoordinate;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// https://adventofcode.com/2021/day/22 - Reactor Reboot
 public class Day22 extends SeparatedDay {
     private static final Cuboid PART_1_REGION = new Cuboid(ZCoordinate.of(-50, -50, -50), ZCoordinate.of(50, 50, 50), false);
     private List<Cuboid> part1Cuboids;

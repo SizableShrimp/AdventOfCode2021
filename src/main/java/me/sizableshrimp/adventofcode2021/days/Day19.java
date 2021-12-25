@@ -26,8 +26,6 @@ package me.sizableshrimp.adventofcode2021.days;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntIntImmutablePair;
-import it.unimi.dsi.fastutil.ints.IntIntPair;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -42,6 +40,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// https://adventofcode.com/2021/day/19 - Beacon Scanner
 public class Day19 extends Day {
     private static final List<ZCoordinateMutator> ROTATION_REFLECTIONS = List.of(
             ZCoordinateMutator.IDENTITY,

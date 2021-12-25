@@ -24,13 +24,12 @@
 package me.sizableshrimp.adventofcode2021.days;
 
 import me.sizableshrimp.adventofcode2021.helper.GridHelper;
-import me.sizableshrimp.adventofcode2021.templates.Coordinate;
 import me.sizableshrimp.adventofcode2021.templates.Direction;
 import me.sizableshrimp.adventofcode2021.templates.EnumState;
 import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
+// https://adventofcode.com/2021/day/25 - Sea Cucumber
 public class Day25 extends SeparatedDay {
-
     private State[][] startingGrid;
 
     public static void main(String[] args) {

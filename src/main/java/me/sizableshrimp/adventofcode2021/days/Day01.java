@@ -27,6 +27,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import me.sizableshrimp.adventofcode2021.helper.ListConvert;
 import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
+// https://adventofcode.com/2021/day/1 - Sonar Sweep
 public class Day01 extends SeparatedDay {
     private IntList depths;
 

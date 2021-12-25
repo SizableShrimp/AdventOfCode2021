@@ -78,7 +78,8 @@ public class Main {
                     run(day);
                     return;
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         LocalDateTime time = LocalDateTime.now(ZoneId.of("America/New_York"));

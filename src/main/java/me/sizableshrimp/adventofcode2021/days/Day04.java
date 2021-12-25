@@ -35,9 +35,9 @@ import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
+// https://adventofcode.com/2021/day/4 - Giant Squid
 public class Day04 extends SeparatedDay {
     private IntList drawList;
     private Int2IntMap drawMap;
@@ -63,7 +63,7 @@ public class Day04 extends SeparatedDay {
 
         for (Board board : boards) {
             int winIndex = board.getWinIndex();
-            if (selected == null || (max && winIndex > target) || (!max  && winIndex < target)) {
+            if (selected == null || (max && winIndex > target) || (!max && winIndex < target)) {
                 target = winIndex;
                 selected = board;
             }

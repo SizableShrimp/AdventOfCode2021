@@ -25,7 +25,6 @@ package me.sizableshrimp.adventofcode2021.days;
 
 import me.sizableshrimp.adventofcode2021.helper.LetterParser;
 import me.sizableshrimp.adventofcode2021.helper.LineConvert;
-import me.sizableshrimp.adventofcode2021.helper.Printer;
 import me.sizableshrimp.adventofcode2021.templates.Coordinate;
 import me.sizableshrimp.adventofcode2021.templates.Day;
 
@@ -34,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// https://adventofcode.com/2021/day/13 - Transparent Origami
 public class Day13 extends Day {
     private Set<Coordinate> startingCoords;
     private List<Fold> folds;

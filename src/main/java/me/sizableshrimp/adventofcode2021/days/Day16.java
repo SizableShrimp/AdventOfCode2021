@@ -28,9 +28,8 @@ import it.unimi.dsi.fastutil.longs.LongList;
 import me.sizableshrimp.adventofcode2021.templates.Day;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
+// https://adventofcode.com/2021/day/16 - Packet Decoder
 public class Day16 extends Day {
     private String template;
     private int versions;

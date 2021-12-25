@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import me.sizableshrimp.adventofcode2021.templates.SeparatedDay;
 
+// https://adventofcode.com/2021/day/18 - Snailfish
 public class Day18 extends SeparatedDay {
     public static void main(String[] args) {
         new Day18().run();
